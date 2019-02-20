@@ -14,14 +14,31 @@ class App extends Component {
     showPersons: false
   }
 
+  static getDerivedStateFromProps(props, state) {
+    console.log('[App.js] getDerivedStateFromProps', props);
+    return state;
+  }
+
+  // componentWillMount() {
+  //   console.log('[App.js] componentWillMount');
+  // }
+
+  componentDidMount() {
+    console.log('[App.js] componentDidMount');
+  }
+
   deletePersonHandler = (personIndex) => {
+    console.log('[App.js] deletePersonHandler');
+
     const persons = [...this.state.persons];
     persons.splice(personIndex, 1);
     this.setState({persons: persons});
   }
 
   nameChangedHandler = (event, id) => {
-    const personIndex = this.persons.findIndex(p => {
+    console.log('[App.js] nameChangedHandler');
+
+    const personIndex = this.state.persons.findIndex(p => {
       return p.id === id;
     });
 
@@ -40,12 +57,15 @@ class App extends Component {
   }
 
   togglePersonHandler = () => {
+    console.log('[App.js] togglePersonHandler');
+
     this.setState( {
       showPersons: !this.state.showPersons
     });
   }
 
   render() {
+    console.log('[App.js] rendering...');
 
     let persons = null;
 
