@@ -4,13 +4,14 @@ import classes from './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
 import withClass from '../hoc/withClass';
+import AuthContext from '../context/auth-context';
 
 class App extends Component {
   state = {
     persons: [
-      { id: 'sdas1', name: 'Max', age: 28},
-      { id: 'sdas2', name: 'Kiki', age: 29},
-      { id: 's3', name: 'Dan', age: 26},
+      { id: 'sdas1', name: 'Max', age: 28 },
+      { id: 'sdas2', name: 'Kiki', age: 29 },
+      { id: 's3', name: 'Dan', age: 26 },
     ],
     showPersons: false,
     showCockpit: true,
@@ -47,7 +48,7 @@ class App extends Component {
 
     const persons = [...this.state.persons];
     persons.splice(personIndex, 1);
-    this.setState({persons: persons});
+    this.setState({ persons: persons });
   }
 
   nameChangedHandler = (event, id) => {
@@ -77,13 +78,13 @@ class App extends Component {
   togglePersonHandler = () => {
     console.log('[App.js] togglePersonHandler');
     const doesShowPersons = this.state.showPersons;
-    this.setState( {
+    this.setState({
       showPersons: !doesShowPersons
     });
   }
 
   loginHandler = () => {
-    this.setState({ authenticated: true});
+    this.setState({ authenticated: true });
   }
 
   render() {
@@ -91,29 +92,34 @@ class App extends Component {
 
     let persons = null;
 
-    if(this.state.showPersons) {
-      persons = <Persons 
-                  persons={this.state.persons}
-                  clicked={this.deletePersonHandler}
-                  changed={this.nameChangedHandler}
-                  isAuthenticated={this.state.authenticated} />
+    if (this.state.showPersons) {
+      persons = <Persons
+        persons={this.state.persons}
+        clicked={this.deletePersonHandler}
+        changed={this.nameChangedHandler}
+        isAuthenticated={this.state.authenticated} />
     }
 
     return (
-        <React.Fragment>
-          <button onClick={() => 
-            this.setState({showCockpit : false})
-          }>Remove Cockpit</button>
+      <React.Fragment>
+        <button onClick={() =>
+          this.setState({ showCockpit: false })
+        }>Remove Cockpit</button>
+        <AuthContext.Provider
+          value={{
+            authenticated: this.state.authenticated, 
+            login: this.loginHandler
+          }}>
           {this.state.showCockpit ? (
-          <Cockpit 
-            title={this.props.appTitle}
-            showPersons={this.state.showPersons}
-            personsLength={this.state.persons.length}
-            clicked={this.togglePersonHandler}
-            login={this.loginHandler} />
-            ) : null}
+            <Cockpit
+              title={this.props.appTitle}
+              showPersons={this.state.showPersons}
+              personsLength={this.state.persons.length}
+              clicked={this.togglePersonHandler} />
+          ) : null}
           {persons}
-        </React.Fragment>
+        </AuthContext.Provider>
+      </React.Fragment>
     );
     //return React.createElement('div', {className: 'App'}, React.createElement('h1', null, 'Hi!'));
   }
